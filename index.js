@@ -1,126 +1,93 @@
-//let userChoice = prompt("Type your choice: ");
 let choiceList = ["rock", "paper", "scissors"];
 let humanScore = 0, computerScore = 0;
 
-// playGame();
+// Cache DOM elements to avoid repeated selection
+const playerScoreElement = document.querySelector(".player h3");
+const computerScoreElement = document.querySelector(".computer h3");
+const headingElement = document.querySelector(".container h4");
+const playerDiv = document.querySelector(".player");
+const computerDiv = document.querySelector(".computer");
+const choicesContainer = document.querySelector(".choices");
 
-
-
+// Function to get the computer's choice
 function getComputerChoice() {
-   let randomIndex = Math.floor(Math.random() * 3);
-   console.log(choiceList[randomIndex]);
-   return choiceList[randomIndex];
+    let randomIndex = Math.floor(Math.random() * 3);
+    return choiceList[randomIndex];
 }
 
-// function getHumanChoice() {
-//     let typedChoice = prompt("Type your choice: ");
-//     return typedChoice.toLowerCase();
-// }
+// Function to reset scores and update the DOM
+function resetScores() {
+    humanScore = 0;
+    computerScore = 0;
+    playerScoreElement.textContent = "Player: 0";
+    computerScoreElement.textContent = "Computer: 0";
+}
 
-function playRound (computerChoice, humanChoice) {
-    const getPlayerScore = document.querySelector(".player h3");
-    const getComputerScore = document.querySelector(".computer h3");
-    const getHeading = document.querySelector(".container h4");
-    if (computerChoice == humanChoice) {
-        getHeading.textContent = "It's a tie!!!";
+// Function to update the heading message
+function updateHeading(message) {
+    headingElement.textContent = message;
+}
+
+// Function to render an image in the specified container
+function renderImage(parentDiv, imgSrc) {
+    let existingImage = parentDiv.querySelector("img");
+    if (existingImage) {
+        existingImage.remove();
+    }
+
+    let newImage = document.createElement("img");
+    newImage.setAttribute("src", imgSrc);
+    parentDiv.insertBefore(newImage, parentDiv.children[0]);
+}
+
+// Function to get the image path based on the choice
+function getImagePath(choice) {
+    return `./public/images/${choice}.png`;
+}
+
+// Winning logic using a map
+const winningMap = {
+    rock: "scissors",
+    paper: "rock",
+    scissors: "paper"
+};
+
+// Function to handle one round of the game
+function playRound(computerChoice, humanChoice) {
+    if (computerChoice === humanChoice) {
+        updateHeading("It's a tie!!!");
         return;
     }
-    if (computerChoice == "rock") {
 
-        if (humanChoice == "paper") {
-            humanScore++;
-            getHeading.textContent = "You Win!!!";
-            getPlayerScore.textContent = `Player: ${humanScore}`;
-        } else {
-            computerScore++;
-            getHeading.textContent = "You Lose!!!";
-            getComputerScore.textContent = `Computer: ${computerScore}`;
-        }
-
-    } else if (computerChoice == "paper") {
-
-        if (humanChoice == "scissors") {
-            humanScore++;
-            getHeading.textContent = "You Win!!!";
-            getPlayerScore.textContent = `Player: ${humanScore}`;
-        } else {
-            computerScore++;
-            getComputerScore.textContent = `Computer: ${computerScore}`;
-            getHeading.textContent = "You Lose!!!";
-        }
-
-    } else if (computerChoice == "scissors") {
-
-        if (humanChoice == "paper") {
-            computerScore++;
-            getComputerScore.textContent = `Computer: ${computerScore}`;
-            getHeading.textContent = "You Lose!!!";
-
-        } else {
-            humanScore++;
-            getHeading.textContent = "You Win!!!";
-            getPlayerScore.textContent = `Player: ${humanScore}`;
-        }
-
+    if (winningMap[humanChoice] === computerChoice) {
+        humanScore++;
+        updateHeading("You Win!!!");
+        playerScoreElement.textContent = `Player: ${humanScore}`;
+    } else {
+        computerScore++;
+        updateHeading("You Lose!!!");
+        computerScoreElement.textContent = `Computer: ${computerScore}`;
     }
-    return;
 }
 
-
-
-
-const choices = document.querySelectorAll(".choices img");
-
-choices.forEach(choice => {
-    choice.addEventListener("click", function (e) {
-        let findImagePlayer = document.querySelector(".player img");
-        let findImageComputer = document.querySelector(".computer img");
-
-        if (findImagePlayer != null) {
-            findImagePlayer.remove();
-        }
-        if (findImageComputer != null) {
-            findImageComputer.remove();
-        }
-
+// Event listener for handling user clicks on choices
+choicesContainer.addEventListener("click", (e) => {
+    if (e.target.tagName === "IMG") {
+        // Get player and computer choices
+        let personChoice = e.target.getAttribute("src").split('/').pop().split('.')[0];
         let computerChoice = getComputerChoice();
-        let personChoice = (e.target).getAttribute("src").split('/').pop().split('.')[0];
 
-        const playerDiv = document.querySelector(".player");
-        const computerDiv = document.querySelector(".computer");
+        // Render the player and computer choices
+        renderImage(playerDiv, e.target.getAttribute("src"));
+        renderImage(computerDiv, getImagePath(computerChoice));
 
-        const requiredComputerImageURL= "./public/images/" +  computerChoice + ".png";
-        const requiredPlayerImageURL = (e.target).getAttribute("src");
-
-        let requiredImage = document.createElement("img");
-        requiredImage.setAttribute("src", requiredPlayerImageURL);
-        playerDiv.insertBefore(requiredImage, playerDiv.children[0]);
-        
-        let requiredComputerImage = document.createElement("img");
-        requiredComputerImage.setAttribute("src", requiredComputerImageURL);
-        computerDiv.insertBefore(requiredComputerImage, computerDiv.children[0]);
-
+        // Play a round
         playRound(computerChoice, personChoice);
 
-       if (humanScore == 3) {
-            const getHeading = document.querySelector(".container h4");
-            getHeading.textContent = "You Win this Round!!!";
-            computerScore = 0;
-            humanScore = 0;
-            document.querySelector(".player h3").textContent = "Player: 0";
-            document.querySelector(".computer h3").textContent = "Computer: 0";
-       }
-
-       if (computerScore == 3) {
-        const getHeading = document.querySelector(".container h4");
-        getHeading.textContent = "You Lose this Round!!!";
-        computerScore = 0;
-        humanScore = 0;
-        document.querySelector(".player h3").textContent = "Player: 0";
-        document.querySelector(".computer h3").textContent = "Computer: 0";
-   }
-        
-        
-    });
-})
-
+        // Check for a winner and reset scores if necessary
+        if (humanScore === 3 || computerScore === 3) {
+            updateHeading(humanScore === 3 ? "You Win this Round!!!" : "You Lose this Round!!!");
+            resetScores();
+        }
+    }
+});
