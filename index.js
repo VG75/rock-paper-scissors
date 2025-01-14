@@ -1,15 +1,16 @@
-// //let userChoice = prompt("Type your choice: ");
-// let choiceList = ["rock", "paper", "scissors"];
-// let humanScore = 0, computerScore = 0;
+//let userChoice = prompt("Type your choice: ");
+let choiceList = ["rock", "paper", "scissors"];
+let humanScore = 0, computerScore = 0;
 
 // playGame();
 
 
 
-// function getComputerChoice() {
-//    let randomIndex = Math.floor(Math.random() * 3);
-//    return choiceList[randomIndex];
-// }
+function getComputerChoice() {
+   let randomIndex = Math.floor(Math.random() * 3);
+   console.log(choiceList[randomIndex]);
+   return choiceList[randomIndex];
+}
 
 // function getHumanChoice() {
 //     let typedChoice = prompt("Type your choice: ");
@@ -77,18 +78,28 @@ const choices = document.querySelectorAll(".choices img");
 
 choices.forEach(choice => {
     choice.addEventListener("click", function (e) {
-        let findImage = document.querySelector(".player img");
-        if (findImage != null) {
-            findImage.remove();
+        let findImagePlayer = document.querySelector(".player img");
+        let findImageComputer = document.querySelector(".computer img");
+
+        if (findImagePlayer != null) {
+            findImagePlayer.remove();
+        }
+        if (findImageComputer != null) {
+            findImageComputer.remove();
         }
         const playerDiv = document.querySelector(".player");
-        const requiredImageURL = (e.target).getAttribute("src");
+        const computerDiv = document.querySelector(".computer");
+        
+        const requiredPlayerImageURL = (e.target).getAttribute("src");
         let requiredImage = document.createElement("img");
-        requiredImage.setAttribute("src", requiredImageURL);
+        let requiredComputerImage = document.createElement("img");
+
+        requiredImage.setAttribute("src", requiredPlayerImageURL);
         playerDiv.insertBefore(requiredImage, playerDiv.children[0]);
+
+        const requiredComputerImageURL = "./public/images/" +  getComputerChoice() + ".png";
+        requiredComputerImage.setAttribute("src", requiredComputerImageURL)
+        computerDiv.insertBefore(requiredComputerImage, computerDiv.children[0]);
     });
 })
 
-function addImage() {
-    
-}
