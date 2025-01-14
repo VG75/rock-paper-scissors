@@ -47,6 +47,8 @@ header > h1 {
     font-size: 20px;
     font-family: 'IBM Plex Serif';
     margin: 4px auto;
+    margin-bottom: 8px;
+    font-weight: 400;
 }
 
 .inner-container {
@@ -74,14 +76,28 @@ img {
     border: 2px solid #211818;
     width: 120px;
     height: 120px;
+    -webkit-filter: brightness(100%);
+}
+
+img:hover {
+    -webkit-filter: brightness(40%);
+    -webkit-transition: all 0.25s ease;
+    -moz-transition: all 0.25s ease;
+    -o-transition: all 0.25s ease;
+    -ms-transition: all0.25s ease;
+    transition: all 0.25s ease;
 }
 
 footer {
     text-align: center;
     color: rgb(219, 180, 180);
-    font-size: 30px;
+    font-size: 25px;
     font-weight: 600;
-    margin-top: px;
+    margin-top: 40px;
+}
+
+footer p {
+    margin: 0;
 }
 
 
