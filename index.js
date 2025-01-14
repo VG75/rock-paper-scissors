@@ -17,61 +17,56 @@ function getComputerChoice() {
 //     return typedChoice.toLowerCase();
 // }
 
-// function playRound () {
-//     let computerChoice = getComputerChoice();
-//     console.log(`computer choice: ${computerChoice}`);
-//     let humanChoice = getHumanChoice();
-//     if (computerChoice == humanChoice) {
-//         console.log("It's a draw");
-//         return;
-//     }
-//     if (computerChoice == "rock") {
+function playRound (computerChoice, humanChoice) {
+    const getPlayerScore = document.querySelector(".player h3");
+    const getComputerScore = document.querySelector(".computer h3");
+    const getHeading = document.querySelector(".container h4");
+    if (computerChoice == humanChoice) {
+        getHeading.textContent = "It's a tie!!!";
+        return;
+    }
+    if (computerChoice == "rock") {
 
-//         if (humanChoice == "paper") {
-//             console.log("You win!!");
-//             humanScore++;
-//         } else {
-//             console.log("You Lose!!");
-//             computerScore++;
-//         }
+        if (humanChoice == "paper") {
+            humanScore++;
+            getHeading.textContent = "You Win!!!";
+            getPlayerScore.textContent = `Player: ${humanScore}`;
+        } else {
+            computerScore++;
+            getHeading.textContent = "You Lose!!!";
+            getComputerScore.textContent = `Computer: ${computerScore}`;
+        }
 
-//     } else if (computerChoice == "paper") {
+    } else if (computerChoice == "paper") {
 
-//         if (humanChoice == "scissors") {
-//             console.log("You win!!");
-//             humanScore++;
-//         } else {
-//             console.log("You Lose!!");
-//             computerScore++;
-//         }
+        if (humanChoice == "scissors") {
+            humanScore++;
+            getHeading.textContent = "You Win!!!";
+            getPlayerScore.textContent = `Player: ${humanScore}`;
+        } else {
+            computerScore++;
+            getComputerScore.textContent = `Computer: ${computerScore}`;
+            getHeading.textContent = "You Lose!!!";
+        }
 
-//     } else if (computerChoice == "scissors") {
+    } else if (computerChoice == "scissors") {
 
-//         if (humanChoice == "paper") {
-//             console.log("You Lose!!");
-//             //
-//             computerScore++;
+        if (humanChoice == "paper") {
+            computerScore++;
+            getComputerScore.textContent = `Computer: ${computerScore}`;
+            getHeading.textContent = "You Lose!!!";
 
-//         } else {
-//             console.log("You Win!!");
-//             humanScore++;
-//         }
+        } else {
+            humanScore++;
+            getHeading.textContent = "You Win!!!";
+            getPlayerScore.textContent = `Player: ${humanScore}`;
+        }
 
-//     }
-// }
+    }
+    return;
+}
 
-// function playGame() {
-//     for (let i = 1; i <= 5; i++) {
-//         playRound();
-//     }
-//     if (humanScore > computerScore) {
-//         console.log("You win the entire game!!!");
-//     } else if (humanScore < computerScore) {
-//         console.log("You Lost the game!!!");
-//     } else {
-//         console.log("It's a draw game!!!");
-//     }
-// }
+
 
 
 const choices = document.querySelectorAll(".choices img");
@@ -87,19 +82,45 @@ choices.forEach(choice => {
         if (findImageComputer != null) {
             findImageComputer.remove();
         }
+
+        let computerChoice = getComputerChoice();
+        let personChoice = (e.target).getAttribute("src").split('/').pop().split('.')[0];
+
         const playerDiv = document.querySelector(".player");
         const computerDiv = document.querySelector(".computer");
-        
-        const requiredPlayerImageURL = (e.target).getAttribute("src");
-        let requiredImage = document.createElement("img");
-        let requiredComputerImage = document.createElement("img");
 
+        const requiredComputerImageURL= "./public/images/" +  computerChoice + ".png";
+        const requiredPlayerImageURL = (e.target).getAttribute("src");
+
+        let requiredImage = document.createElement("img");
         requiredImage.setAttribute("src", requiredPlayerImageURL);
         playerDiv.insertBefore(requiredImage, playerDiv.children[0]);
-
-        const requiredComputerImageURL = "./public/images/" +  getComputerChoice() + ".png";
-        requiredComputerImage.setAttribute("src", requiredComputerImageURL)
+        
+        let requiredComputerImage = document.createElement("img");
+        requiredComputerImage.setAttribute("src", requiredComputerImageURL);
         computerDiv.insertBefore(requiredComputerImage, computerDiv.children[0]);
+
+        playRound(computerChoice, personChoice);
+
+       if (humanScore == 3) {
+            const getHeading = document.querySelector(".container h4");
+            getHeading.textContent = "You Win this Round!!!";
+            computerScore = 0;
+            humanScore = 0;
+            document.querySelector(".player h3").textContent = "Player: 0";
+            document.querySelector(".computer h3").textContent = "Computer: 0";
+       }
+
+       if (computerScore == 3) {
+        const getHeading = document.querySelector(".container h4");
+        getHeading.textContent = "You Lose this Round!!!";
+        computerScore = 0;
+        humanScore = 0;
+        document.querySelector(".player h3").textContent = "Player: 0";
+        document.querySelector(".computer h3").textContent = "Computer: 0";
+   }
+        
+        
     });
 })
 
